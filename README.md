@@ -1,5 +1,9 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Systolic Array AI Accelerator
 RTL to FPGA to ASIC | Sky130 130nm | OpenLane | Vivado
+
+![GDSII Layout](docs/screenshots/gdsii_layout.png)
 
 ---
 
@@ -153,3 +157,22 @@ Hardware does not just work at time-zero — BTI aging degrades timing margins o
 
 Built end-to-end as a Complex Engineering Project in VLSI Design.
 Every layer from NumPy to GDSII implemented and verified.
+
+---
+
+Future Work
+
+- Scale from 4x4 to 8x8 PE mesh for higher throughput
+- Add INT4 sub-word precision support alongside INT8
+- Implement zero-skipping sparse computation block
+- Power gating on idle PEs for dynamic energy reduction
+- Post-layout NGSpice simulation with extracted parasitics
+- Full aging-aware timing closure with BTI margin built into constraints
+
+---
+
+Roofline Model Notes
+
+CPU reference: single-core ARM Cortex-A55 running GEMM at ~0.8 GOPS (typical edge SoC).
+GPU reference: NVIDIA Jetson Nano edge GPU at ~8 GOPS sustained for INT8 workloads.
+Systolic array peak compute: 4x4 PEs x 2 ops/cycle x 100MHz = 3.2 GOPS theoretical, 2.30 GOPS achieved (72% efficiency).

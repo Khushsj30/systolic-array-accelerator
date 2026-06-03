@@ -1,0 +1,17 @@
+# =============================================================================
+# Python dependencies — Systolic Array AI Accelerator
+# Install: pip install -r requirements.txt
+# Python  : 3.8+
+# =============================================================================
+
+# Core numerical
+numpy>=1.21.0
+
+# Plotting — roofline, BTI aging curves, waveform analysis
+matplotlib>=3.4.0
+
+# Data handling
+pandas>=1.3.0
+
+# Progress bars (used in aging simulation loops)
+tqdm>=4.62.0

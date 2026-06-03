@@ -1,3 +1,14 @@
+// =============================================================================
+// Module      : systolic_array
+// Project     : Systolic Array AI Accelerator
+// Author      : Khush (NIT Warangal)
+// Description : 4x4 weight-stationary systolic array for matrix multiplication.
+//               16 PE instances wired in a mesh. Input skewing controller
+//               ensures diagonal data flow for correct systolic operation.
+//               Computes C = A x B for 4x4 INT8 matrices at 100MHz.
+// Parameters  : N=4 (array dimension), DATA_WIDTH=8 (operand bits)
+// =============================================================================
+
 module systolic_array (
     input  wire        clk,
     input  wire        rst,

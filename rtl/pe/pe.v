@@ -1,3 +1,14 @@
+// =============================================================================
+// Module      : pe (Processing Element)
+// Project     : Systolic Array AI Accelerator
+// Author      : Khush (NIT Warangal)
+// Description : 8-bit weight-stationary MAC unit for systolic array.
+//               Computes acc += a_in * b_in on each clock edge when enabled.
+//               Passes a_in and b_in to neighboring PEs for systolic flow.
+// Inputs      : clk, rst, en, a_in[7:0], b_in[7:0]
+// Outputs     : a_out[7:0], b_out[7:0], acc[31:0]
+// =============================================================================
+
 module pe (
     input  wire        clk,
     input  wire        rst,

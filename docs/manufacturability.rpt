@@ -2,9 +2,9 @@ Design Name: systolic_array
 Run Directory: /openlane/designs/systolic_array/runs/RUN_2026.06.02_17.49.25
 ----------------------------------------
 
-Magic DRC Summary:
+OpenLane DRC Summary:
 Source: /openlane/designs/systolic_array/runs/RUN_2026.06.02_17.49.25/reports/signoff/drc.rpt
-Total Magic DRC violations is 0
+Total DRC violations is 0
 ----------------------------------------
 
 LVS Summary:

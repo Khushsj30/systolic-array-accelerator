@@ -18,7 +18,7 @@ roofline = np.minimum(peak_compute_gops, peak_bandwidth_gbps * ai)
 # Benchmark points (ops/byte, performance GOPS)
 points = {
     "My Systolic Array": (ridge_point, peak_compute_gops * 0.72),
-    "CPU\n(typical)":       (1.0, 0.8),
+    "CPU\n(Ryzen 7 7730U)":  (1.0, 0.8),
     "GPU\n(edge)":          (4.0, 8.0),
 }
 

@@ -41,12 +41,10 @@ This is a known open-source PDK flow limitation and does not affect functional s
 
 
 ### PE Testbench — Single Processing Element (3×4=12 verified)
-![PE Waveform](docs/screenshots/pe_waveform.png)
 
 > `a_in=0x03`, `b_in=0x04` → `acc=0x0C (12)` | `pass_count=1`, `fail_count=0`
 
 ### Array Testbench — 4×4 Systolic Matrix Multiply
-![Array Waveform](docs/screenshots/array_waveform.png)
 
 > All 16 `c[i][j]` outputs populated with correct hex values at ~58ns
 ---
@@ -73,7 +71,7 @@ Python (NumPy)           ->  Cycle-accurate golden reference
 Verilog RTL              ->  Processing Element + 4x4 Array
 Icarus Verilog + GTKWave ->  Functional simulation + waveform analysis
 Vivado 2025.1            ->  FPGA synthesis on Artix-7 at 100MHz
-Magic VLSI + Sky130      ->  Transistor-level CMOS layout
+KLayout + Sky130      ->  Transistor-level CMOS layout
 OpenLane + Sky130 PDK    ->  Full RTL-to-GDSII automated ASIC flow
 KLayout                  ->  GDSII visualization
 Python (matplotlib)      ->  BTI aging analysis + Roofline model
@@ -83,7 +81,7 @@ Python (matplotlib)      ->  BTI aging analysis + Roofline model
 Phase by Phase
 
 Phase 0 - Environment Setup
-Verified the full VLSI toolchain: Icarus Verilog 12.0, GTKWave, Magic VLSI 8.3, Sky130 PDK, NGSpice-42, Netgen, Vivado 2025.1. Set up a Python venv with numpy, matplotlib, pandas, PyTorch.
+Verified the full VLSI toolchain: Icarus Verilog 12.0, GTKWave, KLayout 0.28, Sky130 PDK, NGSpice-42, Netgen, Vivado 2025.1. Set up a Python venv with numpy, matplotlib, pandas, PyTorch.
 
 Phase 1 - Python Golden Reference
 Before touching any hardware description, I built a cycle-accurate software simulation of the systolic array in NumPy. Weight-stationary dataflow, diagonal input skewing, full 4x4 matrix multiply — verified against np.matmul(). This becomes the answer key that all RTL outputs are compared against.
@@ -127,7 +125,7 @@ Die area        : 800 x 800 um
 PDK             : SkyWater sky130A
 Std cell library: sky130_fd_sc_hd
 
-Also drew a CMOS inverter from scratch in Magic VLSI on Sky130. Fixed all 3 DRC violations (nwell enclosure, diff overhang, poly extension) -> DRC clean.
+Also drew a CMOS inverter from scratch using KLayout on Sky130. Fixed all 3 DRC violations (nwell enclosure, diff overhang, poly extension) -> DRC clean.
 
 Phase 6 - BTI Aging Analysis
 Modeled long-term transistor degradation using the Bias Temperature Instability (BTI) physics model, calibrated to Sky130 130nm typical values.
@@ -168,7 +166,7 @@ sim/
 vivado/
   reports/            Timing and utilization reports
 layout/
-  magic/              Magic VLSI layout scripts
+  klayout/            KLayout layout scripts
 docs/
   diagrams/           Analysis plots
   screenshots/        GDSII layout views
@@ -179,7 +177,7 @@ Tools Used
 
 Simulation        : Icarus Verilog 12.0, GTKWave
 FPGA Synthesis    : Vivado 2025.1 (Artix-7)
-Physical Layout   : Magic VLSI 8.3, KLayout
+Physical Layout   : KLayout 0.28 (primary), Sky130 PDK
 ASIC Flow         : OpenLane (Yosys, OpenROAD, TritonRoute)
 PDK               : SkyWater Sky130A 130nm
 Analysis          : Python, NumPy, Matplotlib

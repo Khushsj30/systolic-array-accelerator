@@ -4,7 +4,17 @@ Systolic Array AI Accelerator
 RTL to FPGA to ASIC | Sky130 130nm | OpenLane | Vivado
 
 ![GDSII Layout](docs/screenshots/gdsii_layout.png)
+## Simulation Waveforms
 
+### PE Testbench — Single Processing Element (3×4=12 verified)
+![PE Waveform](docs/screenshots/pe_waveform.png)
+
+> `a_in=0x03`, `b_in=0x04` → `acc=0x0C (12)` | `pass_count=1`, `fail_count=0`
+
+### Array Testbench — 4×4 Systolic Matrix Multiply
+![Array Waveform](docs/screenshots/array_waveform.png)
+
+> All 16 `c[i][j]` outputs populated with correct hex values at ~58ns
 ---
 
 What is this?

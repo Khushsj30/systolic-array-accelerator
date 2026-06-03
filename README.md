@@ -4,7 +4,41 @@
 > RTL to FPGA to ASIC | Sky130 130nm | OpenLane | Vivado
 
 ![GDSII Layout](docs/diagrams/gdsii_layout.png)
+
 ## Simulation Waveforms
+
+### PE Testbench — Single Processing Element (3×4=12 verified)
+![PE Waveform](docs/screenshots/pe_waveform.png)
+> `a_in=0x03`, `b_in=0x04` → `acc=0x0C (12)` | `pass_count=1`, `fail_count=0` ✅
+
+### Array Testbench — 4×4 Systolic Matrix Multiply
+![Array Waveform](docs/screenshots/array_waveform.png)
+> All 16 `c[i][j]` outputs populated with correct hex values at ~58ns ✅
+
+## Performance Analysis
+
+### Roofline Model
+![Roofline Model](docs/diagrams/roofline_model.png)
+> Bandwidth reference: Artix-7 DDR3 theoretical peak ~6.4 GB/s (800MHz DDR3, 64-bit bus). Array sits at ridge point — compute and memory perfectly balanced at 72% efficiency.
+
+### BTI Aging Analysis
+![BTI Aging Analysis](docs/diagrams/bti_aging_analysis.png)
+> Vth shift +399.85mV after 10 years. Timing slack lost: 2.221ns. Design fails timing around year 8 without aging margin.
+
+### Matrix Visualization
+![Matrix Visualization](docs/diagrams/matrix_visualization.png)
+> Diagonal input skewing — data arrives at correct PE at exactly the right cycle.
+
+## Antenna Violations — Known Issue
+
+OpenLane post-route DRC shows **0 standard DRC violations** and **LVS clean**, but the manufacturability report flags **48 pin antenna violations and 47 net antenna violations** (95 total).
+
+Antenna violations occur when long metal routes act as charge collectors during plasma etching, potentially destroying gate oxide. These are separate from standard DRC.
+
+**Fix:** Add `GRT_ANTENNA_ITERS = 3` and `DIODE_INSERTION_STRATEGY = 4` to OpenLane `config.json` to enable automatic antenna diode insertion during routing.
+
+This is a known open-source PDK flow limitation and does not affect functional simulation, FPGA timing closure, or the educational validity of the full RTL-to-GDSII flow.
+
 
 ### PE Testbench — Single Processing Element (3×4=12 verified)
 ![PE Waveform](docs/screenshots/pe_waveform.png)

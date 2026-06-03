@@ -40,16 +40,16 @@ module systolic_array_tb;
         begin
             rst=0; en=1;
             for (t=0; t<10; t=t+1) begin
-                // A: row i delayed by i cycles
-                a_flat[1*DATA_WIDTH-1 -: DATA_WIDTH] = (t>=0 && t<N) ? A[0][t]   : 0;
-                a_flat[2*DATA_WIDTH-1 -: DATA_WIDTH] = (t>=1 && t<N+1) ? A[1][t-1] : 0;
-                a_flat[3*DATA_WIDTH-1 -: DATA_WIDTH] = (t>=2 && t<N+2) ? A[2][t-2] : 0;
-                a_flat[4*DATA_WIDTH-1 -: DATA_WIDTH] = (t>=3 && t<N+3) ? A[3][t-3] : 0;
-                // B: col j delayed by j cycles
-                b_flat[1*DATA_WIDTH-1 -: DATA_WIDTH] = (t>=0 && t<N) ? B[t][0]   : 0;
-                b_flat[2*DATA_WIDTH-1 -: DATA_WIDTH] = (t>=1 && t<N+1) ? B[t-1][1] : 0;
-                b_flat[3*DATA_WIDTH-1 -: DATA_WIDTH] = (t>=2 && t<N+2) ? B[t-2][2] : 0;
-                b_flat[4*DATA_WIDTH-1 -: DATA_WIDTH] = (t>=3 && t<N+3) ? B[t-3][3] : 0;
+                // Feed raw un-skewed columns of A and rows of B
+                // input_skew_controller handles diagonal delays in RTL
+                a_flat[1*DATA_WIDTH-1 -: DATA_WIDTH] = (t<N) ? A[0][t] : 0;
+                a_flat[2*DATA_WIDTH-1 -: DATA_WIDTH] = (t<N) ? A[1][t] : 0;
+                a_flat[3*DATA_WIDTH-1 -: DATA_WIDTH] = (t<N) ? A[2][t] : 0;
+                a_flat[4*DATA_WIDTH-1 -: DATA_WIDTH] = (t<N) ? A[3][t] : 0;
+                b_flat[1*DATA_WIDTH-1 -: DATA_WIDTH] = (t<N) ? B[t][0] : 0;
+                b_flat[2*DATA_WIDTH-1 -: DATA_WIDTH] = (t<N) ? B[t][1] : 0;
+                b_flat[3*DATA_WIDTH-1 -: DATA_WIDTH] = (t<N) ? B[t][2] : 0;
+                b_flat[4*DATA_WIDTH-1 -: DATA_WIDTH] = (t<N) ? B[t][3] : 0;
                 @(posedge clk); #1;
             end
             // Drain

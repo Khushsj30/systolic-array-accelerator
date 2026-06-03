@@ -2,9 +2,10 @@
 // Module      : systolic_array
 // Project     : Systolic Array AI Accelerator
 // Author      : Khush (NIT Warangal)
+// Date        : 2026
 // Description : Parameterized NxN weight-stationary systolic array.
-//               16 PE instances wired in a mesh. Input skewing controller
-//               ensures diagonal data flow for correct systolic operation.
+//               Instantiates input_skew_controller for diagonal data feed,
+//               and NxN PE mesh for MAC operations.
 //               Computes C = A x B for NxN INT matrices at 100MHz.
 //               Default: N=4, DATA_WIDTH=8. Change parameters to scale.
 // Parameters  : N=4 (array dimension), DATA_WIDTH=8 (operand bits)
@@ -19,23 +20,41 @@ module systolic_array #(
     input  wire                          clk,
     input  wire                          rst,
     input  wire                          en,
-    // Flattened NxDATA_WIDTH inputs
+    // Raw un-skewed flattened inputs (feeder handles skewing internally)
     input  wire [N*DATA_WIDTH-1:0]       a_flat,
     input  wire [N*DATA_WIDTH-1:0]       b_flat,
     // Flattened NxNxACC_WIDTH outputs
     output wire [N*N*ACC_WIDTH-1:0]      c_flat
 );
 
+    // Skewed wires from controller to PE mesh boundary
+    wire [N*DATA_WIDTH-1:0] a_skewed;
+    wire [N*DATA_WIDTH-1:0] b_skewed;
+
+    // Input skewing controller — delays row i by i cycles, col j by j cycles
+    input_skew_controller #(
+        .N(N),
+        .DATA_WIDTH(DATA_WIDTH)
+    ) skew_ctrl (
+        .clk      (clk),
+        .rst      (rst),
+        .en       (en),
+        .a_raw    (a_flat),
+        .b_raw    (b_flat),
+        .a_skewed (a_skewed),
+        .b_skewed (b_skewed)
+    );
+
     // Internal mesh wires: a[row][col], b[row][col]
     wire [DATA_WIDTH-1:0] a_wire [0:N-1][0:N];
     wire [DATA_WIDTH-1:0] b_wire [0:N][0:N-1];
 
-    // Connect flattened inputs to mesh boundaries
+    // Connect skewed outputs to PE mesh boundaries
     genvar i;
     generate
         for (i = 0; i < N; i = i + 1) begin : input_connect
-            assign a_wire[i][0] = a_flat[(i+1)*DATA_WIDTH-1 : i*DATA_WIDTH];
-            assign b_wire[0][i] = b_flat[(i+1)*DATA_WIDTH-1 : i*DATA_WIDTH];
+            assign a_wire[i][0] = a_skewed[(i+1)*DATA_WIDTH-1 : i*DATA_WIDTH];
+            assign b_wire[0][i] = b_skewed[(i+1)*DATA_WIDTH-1 : i*DATA_WIDTH];
         end
     endgenerate
 

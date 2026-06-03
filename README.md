@@ -3,7 +3,7 @@
 # Systolic Array AI Accelerator
 > RTL to FPGA to ASIC | Sky130 130nm | OpenLane | Vivado
 
-![GDSII Layout](docs/screenshots/gdsii_layout.png)
+![GDSII Layout](docs/diagrams/gdsii_layout.png)
 ## Simulation Waveforms
 
 ### PE Testbench — Single Processing Element (3×4=12 verified)

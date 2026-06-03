@@ -1,7 +1,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Systolic Array AI Accelerator
-RTL to FPGA to ASIC | Sky130 130nm | OpenLane | Vivado
+# Systolic Array AI Accelerator
+> RTL to FPGA to ASIC | Sky130 130nm | OpenLane | Vivado
 
 ![GDSII Layout](docs/screenshots/gdsii_layout.png)
 ## Simulation Waveforms

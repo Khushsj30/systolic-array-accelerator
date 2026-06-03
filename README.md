@@ -9,11 +9,11 @@
 
 ### PE Testbench — Single Processing Element (3×4=12 verified)
 ![PE Waveform](docs/screenshots/pe_waveform.png)
-> `a_in=0x03`, `b_in=0x04` → `acc=0x0C (12)` | `pass_count=1`, `fail_count=0` ✅
+> `a_in=0x03`, `b_in=0x04` → `acc=0x0C (12)` | `pass_count=1`, `fail_count=0` 
 
 ### Array Testbench — 4×4 Systolic Matrix Multiply
 ![Array Waveform](docs/screenshots/array_waveform.png)
-> All 16 `c[i][j]` outputs populated with correct hex values at ~58ns ✅
+> All 16 `c[i][j]` outputs populated with correct hex values at ~58ns 
 
 ## Performance Analysis
 
@@ -219,31 +219,7 @@ CPU reference: single-core ARM Cortex-A55 running GEMM at ~0.8 GOPS (typical edg
 GPU reference: NVIDIA Jetson Nano edge GPU at ~8 GOPS sustained for INT8 workloads.
 Systolic array peak compute: 4x4 PEs x 2 ops/cycle x 100MHz = 3.2 GOPS theoretical, 2.30 GOPS achieved (72% efficiency).
 
----
-
-## ⚠️ Known Open Items
-
-### Antenna Violations (95 total — fix known, rerun pending)
-
-Post-route OpenLane DRC reports **48 pin antenna violations** and **47 net antenna violations** (95 total).
-
-**What this means:** During CMOS fabrication, long metal wires act as antennas — they accumulate plasma charge which can destroy thin gate oxide on connected transistors. The Sky130 PDK has a maximum antenna ratio; these 95 nets exceed it.
-
-**Why it happened:** The default OpenLane flow does not aggressively insert antenna-repair diodes. The 4×4 accumulator bus wires (32-bit wide, spanning multiple rows) are the primary offenders.
-
-**Exact fix — add to `openlane/config.json`:**
-```json
-"GRT_ANTENNA_ITERS": 3,
-"DIODE_INSERTION_STRATEGY": 4
-```
-
-**What this does:** Strategy 4 inserts fake antenna diodes during placement, then replaces them with real diodes during routing. 3 iterations ensures convergence on designs of this size.
-
-**Status:** Fix identified and documented. Full OpenLane rerun with repair enabled is in progress. The logical correctness of the design is unaffected — all 97 RTL simulation tests pass. The antenna violations are a physical implementation artifact, not a functional bug.
-
-**Before/after report will be added here after rerun.**
-
----
+--- 
 
 ### Roofline Bandwidth Context
 
@@ -252,7 +228,7 @@ The 6.4 GB/s bandwidth figure in the roofline model is derived from the **Artix-
 
 ---
 
-## ✅ OpenLane ASIC Implementation Results (Sky130A PDK)
+##  OpenLane ASIC Implementation Results (Sky130A PDK)
 
 Full physical implementation completed with antenna repair enabled (`RUN_HEURISTIC_DIODE_INSERTION=1`, `GRT_ANTENNA_ITERS=3`).
 
@@ -260,10 +236,10 @@ Full physical implementation completed with antenna repair enabled (`RUN_HEURIST
 
 | Check | Result |
 |---|---|
-| Magic DRC violations | **0** ✅ |
-| LVS | **Clean** (15,226 nets matched) ✅ |
-| Antenna pin violations | **3** (down from 48 — 94% reduction) ✅ |
-| Antenna net violations | **3** (down from 47 — 94% reduction) ✅ |
+| Magic DRC violations | **0**  |
+| LVS | **Clean** (15,226 nets matched)  |
+| Antenna pin violations | **3** (down from 48 — 94% reduction)  |
+| Antenna net violations | **3** (down from 47 — 94% reduction)  |
 
 ### Area & Cells
 
@@ -281,9 +257,9 @@ Full physical implementation completed with antenna repair enabled (`RUN_HEURIST
 |---|---|
 | Clock period | **10 ns (100 MHz)** |
 | Critical path | **5.34 ns** |
-| Slack | **4.66 ns** ✅ |
-| Setup violations | **0** ✅ |
-| Hold violations | **0** ✅ |
+| Slack | **4.66 ns**  |
+| Setup violations | **0**  |
+| Hold violations | **0**  |
 | Typical internal power | **8.32 mW** |
 | Typical switching power | **7.54 mW** |
 | Leakage power | **85.6 nW** |
@@ -295,6 +271,6 @@ Full physical implementation completed with antenna repair enabled (`RUN_HEURIST
 |---|---|
 | Wire length | **795,186 µm** |
 | Vias | **638,841** |
-| TritonRoute violations | **0** ✅ |
+| TritonRoute violations | **0**  |
 | Runtime | **49 min 9 sec** |
 

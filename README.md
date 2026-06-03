@@ -218,3 +218,34 @@ Roofline Model Notes
 CPU reference: single-core ARM Cortex-A55 running GEMM at ~0.8 GOPS (typical edge SoC).
 GPU reference: NVIDIA Jetson Nano edge GPU at ~8 GOPS sustained for INT8 workloads.
 Systolic array peak compute: 4x4 PEs x 2 ops/cycle x 100MHz = 3.2 GOPS theoretical, 2.30 GOPS achieved (72% efficiency).
+
+---
+
+## ⚠️ Known Open Items
+
+### Antenna Violations (95 total — fix known, rerun pending)
+
+Post-route OpenLane DRC reports **48 pin antenna violations** and **47 net antenna violations** (95 total).
+
+**What this means:** During CMOS fabrication, long metal wires act as antennas — they accumulate plasma charge which can destroy thin gate oxide on connected transistors. The Sky130 PDK has a maximum antenna ratio; these 95 nets exceed it.
+
+**Why it happened:** The default OpenLane flow does not aggressively insert antenna-repair diodes. The 4×4 accumulator bus wires (32-bit wide, spanning multiple rows) are the primary offenders.
+
+**Exact fix — add to `openlane/config.json`:**
+```json
+"GRT_ANTENNA_ITERS": 3,
+"DIODE_INSERTION_STRATEGY": 4
+```
+
+**What this does:** Strategy 4 inserts fake antenna diodes during placement, then replaces them with real diodes during routing. 3 iterations ensures convergence on designs of this size.
+
+**Status:** Fix identified and documented. Full OpenLane rerun with repair enabled is in progress. The logical correctness of the design is unaffected — all 97 RTL simulation tests pass. The antenna violations are a physical implementation artifact, not a functional bug.
+
+**Before/after report will be added here after rerun.**
+
+---
+
+### Roofline Bandwidth Context
+
+The 6.4 GB/s bandwidth figure in the roofline model is derived from the **Artix-7 FPGA DDR3 interface spec** (800 MHz DDR3, 16-bit bus = 1.6 GT/s × 4 bytes = 6.4 GB/s). This figure applies to the **FPGA implementation only**. A separate ASIC roofline using Sky130-estimated on-chip memory bandwidth is planned.
+

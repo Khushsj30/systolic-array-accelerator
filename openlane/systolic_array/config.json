@@ -1,0 +1,21 @@
+{
+    "DESIGN_NAME": "systolic_array",
+    "VERILOG_FILES": [
+        "/home/khush/systolic-array-accelerator/rtl/pe/pe.v",
+        "/home/khush/systolic-array-accelerator/rtl/array/systolic_array.v",
+        "/home/khush/systolic-array-accelerator/rtl/controller/input_skew_controller.v"
+    ],
+    "CLOCK_PORT": "clk",
+    "CLOCK_PERIOD": 10.0,
+    "FP_CORE_UTIL": 45,
+    "FP_ASPECT_RATIO": 1,
+    "FP_PDN_VPITCH": 153.6,
+    "FP_PDN_HPITCH": 153.6,
+    "PL_TARGET_DENSITY": 0.5,
+    "GRT_ANTENNA_ITERS": 3,
+    "RUN_HEURISTIC_DIODE_INSERTION": 1,
+    "DIODE_ON_PORTS": "in",
+    "MAX_FANOUT_CONSTRAINT": 6,
+    "SYNTH_STRATEGY": "DELAY 0",
+    "DESIGN_IS_CORE": true
+}

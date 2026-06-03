@@ -1,0 +1,6 @@
+<< properties >>
+string FIXED_BBOX 0 0 111019 113163
+string GDS_END 48453488
+string GDS_FILE /home/khush/systolic-array-accelerator/openlane/systolic_array/runs/third_run/results/signoff/systolic_array.magic.gds
+string GDS_START 1642354
+<< end >>

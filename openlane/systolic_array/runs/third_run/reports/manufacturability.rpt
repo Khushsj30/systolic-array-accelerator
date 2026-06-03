@@ -1,0 +1,19 @@
+Design Name: systolic_array
+Run Directory: /home/khush/systolic-array-accelerator/openlane/systolic_array/runs/third_run
+----------------------------------------
+
+Magic DRC Summary:
+Source: /home/khush/systolic-array-accelerator/openlane/systolic_array/runs/third_run/reports/signoff/drc.rpt
+Total Magic DRC violations is 0
+----------------------------------------
+
+LVS Summary:
+Source: /home/khush/systolic-array-accelerator/openlane/systolic_array/runs/third_run/logs/signoff/43-systolic_array.lef.lvs.log
+Number of nets: 15226                      |Number of nets: 15226                      
+Design is LVS clean.
+----------------------------------------
+
+Antenna Summary:
+Source: /home/khush/systolic-array-accelerator/openlane/systolic_array/runs/third_run/logs/signoff/45-arc.log
+Pin violations: 3
+Net violations: 3

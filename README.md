@@ -249,3 +249,52 @@ Post-route OpenLane DRC reports **48 pin antenna violations** and **47 net anten
 
 The 6.4 GB/s bandwidth figure in the roofline model is derived from the **Artix-7 FPGA DDR3 interface spec** (800 MHz DDR3, 16-bit bus = 1.6 GT/s × 4 bytes = 6.4 GB/s). This figure applies to the **FPGA implementation only**. A separate ASIC roofline using Sky130-estimated on-chip memory bandwidth is planned.
 
+
+---
+
+## ✅ OpenLane ASIC Implementation Results (Sky130A PDK)
+
+Full physical implementation completed with antenna repair enabled (`RUN_HEURISTIC_DIODE_INSERTION=1`, `GRT_ANTENNA_ITERS=3`).
+
+### DRC / LVS / Antenna
+
+| Check | Result |
+|---|---|
+| Magic DRC violations | **0** ✅ |
+| LVS | **Clean** (15,226 nets matched) ✅ |
+| Antenna pin violations | **3** (down from 48 — 94% reduction) ✅ |
+| Antenna net violations | **3** (down from 47 — 94% reduction) ✅ |
+
+### Area & Cells
+
+| Metric | Value |
+|---|---|
+| Die area | **0.314 mm²** |
+| Core utilization | **46.09%** |
+| Synthesized cell count | **14,058 cells** |
+| Total cells (with physical) | **48,044 cells** |
+| Core area | **295,783 µm²** |
+
+### Timing & Power
+
+| Metric | Value |
+|---|---|
+| Clock period | **10 ns (100 MHz)** |
+| Critical path | **5.34 ns** |
+| Slack | **4.66 ns** ✅ |
+| Setup violations | **0** ✅ |
+| Hold violations | **0** ✅ |
+| Typical internal power | **8.32 mW** |
+| Typical switching power | **7.54 mW** |
+| Leakage power | **85.6 nW** |
+| Total power | **~15.86 mW** |
+
+### Routing
+
+| Metric | Value |
+|---|---|
+| Wire length | **795,186 µm** |
+| Vias | **638,841** |
+| TritonRoute violations | **0** ✅ |
+| Runtime | **49 min 9 sec** |
+

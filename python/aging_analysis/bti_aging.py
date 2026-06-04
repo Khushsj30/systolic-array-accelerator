@@ -6,7 +6,7 @@ import os
 
 # BTI Model Parameters (Sky130 130nm typical values)
 Vth0 = 0.42        # Initial threshold voltage (V)
-A = 0.003          # BTI degradation coefficient
+A = 3e-7          # BTI degradation coefficient (scaled demo model)
 n = 0.25           # Time exponent (typical 0.25 for BTI)
 T_years = 10       # Simulation period
 Vdd = 1.8          # Supply voltage (Sky130)
@@ -18,6 +18,7 @@ t_years = t_sec / (365.25 * 24 * 3600)
 
 # BTI threshold voltage shift: delta_Vth = A * t^n
 delta_Vth = A * (t_sec ** n)
+# Educational trend model only; not process-calibrated signoff data
 Vth_aged = Vth0 + delta_Vth
 
 # Timing impact: delay increases as Vth rises
@@ -32,6 +33,7 @@ print("=" * 50)
 print(f"Initial Vth:         {Vth0:.3f} V")
 print(f"Vth after 10 years:  {Vth_aged[-1]:.3f} V")
 print(f"Delta Vth:           {delta_Vth[-1]*1000:.2f} mV")
+print("Note: simplified educational model; values are scaled for illustration.")
 print(f"Delay degradation:   {delay_degradation_pct[-1]:.2f}%")
 print(f"Initial clock period:{Tclk_ns:.2f} ns")
 print(f"Aged clock period:   {Tclk_aged[-1]:.2f} ns")

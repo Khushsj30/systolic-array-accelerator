@@ -2,11 +2,11 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import os
+from pathlib import Path
 
 # Your systolic array specs
 peak_compute_gops = (4 * 4 * 2 * 100e6) / 1e9   # 4x4 PEs, 2 ops/cycle, 100MHz = 3.2 GOPS
-peak_bandwidth_gbps = 6.4                          # estimated memory bandwidth GB/s
+peak_bandwidth_gbps = 3.2                          # Artix-7 MIG DDR3: 16-bit bus @ DDR3-1600 (800MHz DDR, 1600 MT/s x 2 bytes = 3.2 GB/s)
 ridge_point = peak_compute_gops / peak_bandwidth_gbps  # ops/byte
 
 # Arithmetic intensity range
@@ -38,9 +38,11 @@ ax.set_title('Roofline Model — 4x4 Systolic Array vs CPU/GPU', fontsize=13, fo
 ax.legend()
 ax.grid(True, which='both', alpha=0.3)
 
-os.makedirs('../../docs/diagrams', exist_ok=True)
+repo_root = Path(__file__).resolve().parents[2]
+out_dir = repo_root / 'docs' / 'diagrams'
+out_dir.mkdir(parents=True, exist_ok=True)
 plt.tight_layout()
-plt.savefig('../../docs/diagrams/roofline_model.png', dpi=150, bbox_inches='tight')
+plt.savefig(out_dir / 'roofline_model.png', dpi=150, bbox_inches='tight')
 plt.close()
 
 print("=" * 50)

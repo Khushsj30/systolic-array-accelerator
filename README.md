@@ -29,6 +29,16 @@
 ![Matrix Visualization](docs/diagrams/matrix_visualization.png)
 > Diagonal input skewing — data arrives at correct PE at exactly the right cycle.
 
+<<<<<<< HEAD
+=======
+### PE Testbench — Single Processing Element (3×4=12 verified)
+
+> `a_in=0x03`, `b_in=0x04` → `acc=0x0C (12)` | `pass_count=1`, `fail_count=0`
+
+### Array Testbench — 4×4 Systolic Matrix Multiply
+
+> All 16 `c[i][j]` outputs populated with correct hex values at ~58ns
+>>>>>>> 1772764 (README: incorporate BTI review notes and repo status)
 ---
 
 What is this?

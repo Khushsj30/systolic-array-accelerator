@@ -19,11 +19,11 @@
 
 ### Roofline Model
 ![Roofline Model](docs/diagrams/roofline_model.png)
-> Bandwidth reference: Artix-7 DDR3 theoretical peak ~1.6 GB/s (800 MHz DDR3, 16-bit bus). Array sits at ridge point — compute and memory perfectly balanced at 72% efficiency.
+> Bandwidth reference: Artix-7 MIG DDR3 peak ~3.2 GB/s (DDR3-1600, 16-bit bus, 1600 MT/s x 2 bytes). Ridge point at 1.0 ops/byte — compute and memory balanced at 72% efficiency.
 
 ### BTI Aging Analysis
 ![BTI Aging Analysis](docs/diagrams/bti_aging_analysis.png)
-> Vth shift +399.85mV after 10 years. Timing slack lost: 2.221ns. Design fails timing around year 8 without aging margin.
+> Qualitative BTI trend using the R-D power law: delta_Vth = A * t^0.25 (Alam & Mahapatra, 2005). The t^0.25 time dependence and self-limiting degradation shape are physically correct for 130nm-class CMOS. Absolute magnitudes require PDK-calibrated SPICE extraction and are not claimed here.
 
 ### Matrix Visualization
 ![Matrix Visualization](docs/diagrams/matrix_visualization.png)
@@ -76,6 +76,8 @@ Designed the MAC unit (multiply-accumulate) in structural Verilog:
 - Synchronous reset + enable gating
 - 5/5 unit tests passing
 
+To begin a new matrix multiply, assert rst for one clock cycle to clear all accumulators before re-enabling the array.
+
 Phase 3 - Full 4x4 Array Integration  
 Wired 16 PEs into a complete systolic mesh with an input skewing controller. Each row of matrix A enters one cycle later than the row above it, creating a diagonal wave that ensures data arrives at the right PE at exactly the right time.
 
@@ -111,19 +113,20 @@ Also drew a CMOS inverter from scratch using KLayout on Sky130. Fixed all 3 DRC 
 Phase 6 - BTI Aging Analysis  
 Modeled long-term transistor degradation using the Bias Temperature Instability (BTI) physics model, calibrated to Sky130 130nm typical values.
 
-Vth shift after 10 years: +399.85 mV  
-Delay degradation       : 22.21%  
-Clock period (fresh)    : 10.00 ns  
-Clock period (10yr aged): 12.22 ns  
-Timing slack lost       : 2.221 ns
-
-Without aging margin built into the design, the chip starts failing timing around year 8.
+BTI model          : R-D power law, delta_Vth = A * t^n, n = 0.25 (Alam & Mahapatra, 2005)
+Time exponent n    : 0.25 (well-established for both NBTI in PMOS and PBTI in NMOS)
+Supply voltage     : 1.8 V (Sky130 nominal, sky130_fd_sc_hd)
+Model scope        : Qualitative trend only. Coefficient A is illustrative.
+                     Process-calibrated values require PDK SPICE or a ring oscillator aging monitor.
+Key takeaway       : BTI degradation follows a self-limiting power law — rate slows over time.
+                     In production silicon, a timing margin (typically 10-15% of clock period)
+                     is reserved at signoff to absorb aging over the chip lifetime.
 
 Phase 7 - Roofline Model  
 Characterized the array performance envelope against CPU and edge GPU.
 
 Platform          | Arithmetic Intensity | Performance
-My Systolic Array | 0.50 ops/byte        | 2.30 GOPS
+My Systolic Array | 1.00 ops/byte        | 2.30 GOPS
 CPU (typical)     | 1.0 ops/byte         | 0.80 GOPS
 GPU (edge)        | 4.0 ops/byte         | 8.00 GOPS
 
@@ -207,7 +210,7 @@ Systolic array peak compute: 4x4 PEs x 2 ops/cycle x 100MHz = 3.2 GOPS theoretic
 
 ### Roofline Bandwidth Context
 
-The 1.6 GB/s bandwidth figure in the roofline model is derived from the Artix-7 FPGA DDR3 interface spec (800 MHz DDR3, 16-bit bus = 12.8 Gb/s = 1.6 GB/s). This figure applies to the FPGA implementation only. A separate ASIC roofline using Sky130-estimated on-chip memory bandwidth is planned.
+The 3.2 GB/s bandwidth figure is derived from the Artix-7 xc7a35t MIG DDR3 interface specification: 16-bit data bus operating at DDR3-1600 (800 MHz clock, double data rate = 1600 MT/s), giving 1600e6 x 2 bytes = 3.2 GB/s peak theoretical throughput. This yields a ridge point of 1.0 ops/byte (3.2 GOPS / 3.2 GB/s). This figure applies to the FPGA implementation only. A separate ASIC roofline using Sky130-estimated on-chip SRAM bandwidth is planned for a future revision.
 
 ---
 

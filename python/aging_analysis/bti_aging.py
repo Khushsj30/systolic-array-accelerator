@@ -2,11 +2,11 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import os
+from pathlib import Path
 
 # BTI Model Parameters (Sky130 130nm typical values)
 Vth0 = 0.42        # Initial threshold voltage (V)
-A = 3e-7          # BTI degradation coefficient (scaled demo model)
+A = 3e-7           # BTI degradation coefficient (scaled demo model)
 n = 0.25           # Time exponent (typical 0.25 for BTI)
 T_years = 10       # Simulation period
 Vdd = 1.8          # Supply voltage (Sky130)
@@ -65,7 +65,9 @@ axes[2].legend()
 axes[2].grid(True)
 
 plt.tight_layout()
-os.makedirs('../../docs/diagrams', exist_ok=True)
-plt.savefig('../../docs/diagrams/bti_aging_analysis.png', dpi=150, bbox_inches='tight')
+repo_root = Path(__file__).resolve().parents[2]
+out_dir = repo_root / 'docs' / 'diagrams'
+out_dir.mkdir(parents=True, exist_ok=True)
+plt.savefig(out_dir / 'bti_aging_analysis.png', dpi=150, bbox_inches='tight')
 plt.close()
-print("Plot saved to docs/diagrams/bti_aging_analysis.png")
+print(f"Plot saved to {out_dir / 'bti_aging_analysis.png'}")
